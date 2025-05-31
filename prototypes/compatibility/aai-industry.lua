@@ -18,7 +18,15 @@ data_util.remove_ingredient("electronic-circuit", "iron-plate")
 
 ----------
 --- Replace sand to kr-sand
-data_util.add_or_replace_product("sand", "sand", { type = "item", name = "kr-sand", amount = 2 })
+local kr_sand_recipe = table.deepcopy(data.raw.recipe["sand"])
+kr_sand_recipe.name = "kr-aai-sand"
+kr_sand_recipe.localised_name = {"item-name.kr-sand"}
+kr_sand_recipe.results = {
+  { type = "item", name = "kr-sand", amount = 2 }
+}
+data:extend({kr_sand_recipe})
+data_util.add_recipe_unlock("kr-stone-processing", "kr-aai-sand")
+
 data_util.add_recipe_unlock("kr-stone-processing", "sand")
 
 data_util.convert_ingredient("concrete","sand", "kr-sand" )
@@ -33,10 +41,6 @@ data_util.remove_prerequisite("lamp", "glass-processing")
 
 data_util.remove_ingredient("solar-panel", "glass")
 
-if mods["planet-muluna"] then 
-  data_util.remove_ingredient("muluna-silicon-solar-panel", "glass") 
-end
-
 data_util.convert_ingredient("oil-refinery","glass", "kr-glass" )
 data_util.remove_prerequisite("oil-processing", "glass-processing")
 data_util.convert_ingredient("chemical-plant","glass", "kr-glass" )
@@ -49,9 +53,23 @@ data_util.add_prerequisite("electric-lab", "electricity")
 data_util.convert_ingredient("personal-laser-defense-equipment","glass", "kr-glass" )
 data_util.convert_ingredient("laser-turret","glass", "kr-glass" )
 
-data.raw.item["glass"].hidden = true
-data.raw.technology["sand-processing"] = nil
-data.raw.technology["glass-processing"] = nil
+--- Mods compatibility
+if mods["planet-muluna"] then 
+  data_util.remove_ingredient("muluna-silicon-solar-panel", "glass") 
+end
+
+if mods["Moshine"] then 
+  data_util.convert_ingredient("optical-cable","glass", "kr-glass" )
+  data_util.remove_prerequisite("moshine-tech-data-extractor", "glass-processing")
+
+  data_util.convert_ingredient("ai-trainer","glass", "kr-glass" )
+
+  data_util.convert_ingredient("3d-data-storage","glass", "kr-glass" )
+
+  data_util.convert_ingredient("concrete-from-molten-iron-and-sand","sand", "kr-sand" )
+  data_util.convert_ingredient("petroleum-from-sand-sulfur-steam-carbon","sand", "kr-sand" )
+  data_util.convert_ingredient("silicon","sand", "kr-sand" )
+end
 ----------
 
 data.raw.recipe["electronic-circuit"].energy_required = 0.5
