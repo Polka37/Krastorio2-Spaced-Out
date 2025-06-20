@@ -100,6 +100,9 @@ function add_recipe_values(structure, input, result)
 
   local multiplier = result_count
   structure.energy_required = (input.energy_required or 0.5) / 16
+  if structure.energy_required <= 0.001 then
+	structure.energy_required = 0.002
+  end
 
   local result_crafting_tint = {primary = {0.5,0.5,0.5,0.5}, secondary = {0.5,0.5,0.5,0.5}, tertiary = {0.5,0.5,0.5,0.5}, quaternary = {0.5,0.5,0.5,0.5}}
 
